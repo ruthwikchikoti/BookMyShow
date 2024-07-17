@@ -9,15 +9,15 @@ const router = express.Router();
 
 //Function for otp generation
 
-const otpGenerator = function () {
-  return Math.floor((Math.random() * 10000) + 90000);
-}
+  const otpGenerator = function () {
+    return Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
+  }
 
 router.post("/register", async (req, res) => {
   try {
     const userExists = await User.findOne({ email: req.body.email });
     if (userExists) {
-      res.send({
+     return res.send({
         success: false,
         message: "The user already exists!",
       });
@@ -38,6 +38,11 @@ router.post("/register", async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    // send the error message to the user
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 });
 
@@ -46,7 +51,7 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      res.send({
+     return res.send({
         success: false,
         message: "user does not exist Please Register",
       });
@@ -58,7 +63,7 @@ router.post("/login", async (req, res) => {
     );
 
     if (!validPassword) {
-      res.send({
+     return res.send({
         success: false,
         message: "Sorry, invalid password entered!",
       });
@@ -74,20 +79,41 @@ router.post("/login", async (req, res) => {
       token: token,
     });
   } catch (error) {
+
+    // send the error message to the user
+    res.send({
+      success: false,
+      message: error.message,
+    });
+
     console.error(error);
   }
 });
 
 // router-level-middleware
 
+// error handling middleware
 router.get("/get-current-user", authMiddleware, async (req, res) => {
-  const user = await User.findById(req.body.userId).select("-password");
-
-  res.send({
-    success: true,
-    message: 'You are authorized to go to the protected route!',
-    data: user
-   })
+  try {
+    const user = await User.findById(req.body.userId).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.json({
+      success: true,
+      message: 'You are authorized to access the protected route!',
+      data: user
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching user data",
+    });
+  }
 });
 
 // forgot password
@@ -123,11 +149,7 @@ router.patch("/forgetpassword", async function (req, res) {
     user.otp = otp;
     user.otpExpiry = Date.now() + 10 * 60 * 1000;
     // those updates will be send to the db
-    await user.save();
-    res.status(200).json({
-      status: "success",
-      message: "otp sent to your email",
-    });
+
     // send the mail to there email -> otp
     await EmailHelper(
       "otp.html"
@@ -136,10 +158,15 @@ router.patch("/forgetpassword", async function (req, res) {
         name: user.name,
         otp: otp
       });
+      res.status(200).json({
+        status: "success",
+        message: "otp sent to your email",
+      });
+      
   } catch (err) {
     res.status(500).json({
       message: err.message,
-      status: "failure"
+      status: false
     })
   }
   //  email
@@ -153,7 +180,7 @@ router.patch("/resetpassword", async function (req, res) {
   try {
     let resetDetails = req.body;
     // required fields are there or not 
-    if (!resetDetails.password == true || !resetDetails.otp == true) {
+    if (!resetDetails.password  || !resetDetails.otp) {
      return res.status(401).json({
         status: "failure",
         message: "invalid request"
