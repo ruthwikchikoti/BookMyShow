@@ -23,6 +23,17 @@ function ProtectedRoute({ children }) {
     {
       label: "Home",
       icon: <HomeOutlined />,
+      onClick: () => {
+        if (user.role === 'admin') {
+          navigate("/admin");
+        } else if (user.role === 'partner') {
+          navigate("/partner");
+        } else {
+
+        navigate("/");
+
+        }
+      }
     },
 
     {
