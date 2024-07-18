@@ -10,7 +10,7 @@ const EmailHelper = require("../utils/emailSender");
 
 const endpointSecret = "whsec_774b9109545b45e18af845534afa4e7e0d144a1a57db46482ca7886c10cd5a5a";
 
- // Webhook endpoint 
+  // Webhook endpoint 
 router.post('/webhook', express.raw({ type: 'application/json' }), (request, response) => {
   console.log('Webhook Called')
   const sig = request.headers['stripe-signature'];
