@@ -1,39 +1,29 @@
-import React, { Children } from 'react'
-
-import {Tabs} from 'antd'
-import MovieList from './MovieList'
-import TheatresTable from './TheatresTable'
-import MovieFrom from './MovieForm'
+import React from "react";
+import PageTitle from "../../components/PageTitle";
+import { Tabs } from "antd";
+ import MoviesList from "./MoviesList";
+ import TheatresList from "./TheatresList";
+ import UpcomingList from './UpcomingList'
 
 function Admin() {
-
-    const tabItems = [
-        { 
-            key : '1',
-            label : 'Movies',
-            children : <MovieList/>
-
-        },
-
-        {
-           key : '2',
-           label : 'Theatres',
-           children : <TheatresTable/>
-        }
-    ]
-
-
   return (
     <div>
-        <h1>Admin Page</h1>
+      <PageTitle title="Admin" />
 
+      <Tabs defaultActiveKey="1">
+        <Tabs.TabPane tab="Movies" key="1">
+            <MoviesList/>
+        </Tabs.TabPane>
 
-
-        <Tabs items={tabItems}/>
-
-
+        <Tabs.TabPane tab="Theatres" key="2">
+            <TheatresList/>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Upcoming Movies" key="3">
+            <UpcomingList/>
+        </Tabs.TabPane>
+      </Tabs>
     </div>
-  )
+  );
 }
 
-export default Admin
+export default Admin;

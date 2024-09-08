@@ -1,28 +1,29 @@
-import "./App.css";
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import "./stylesheets/alignments.css";
+import "./stylesheets/sizes.css";
+import "./stylesheets/form-elements.css";
+import "./stylesheets/custom.css";
+import "./stylesheets/theme.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useSelector } from "react-redux";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
+import TheatresForMovie from "./pages/TheatresForMovie";
 import BookShow from "./pages/BookShow";
-import SingleMovie from "./pages/SingleMovie";
-import Partner from "./pages/Partner";
-import Forget from "./pages/Forget";
-import Reset from "./pages/Reset";
+
+
+
 
 function App() {
-  const { loading } = useSelector((state) => state.loader);
-
+  const { loading } = useSelector((state) => state.loaders);
   return (
-    <div className="App">
+    <div>
       {loading && (
-        <div className="loader-container">
-          {" "}
-          <div className="loader"> </div>{" "}
+        <div className="loader-parent">
+          <div className="loader"></div>
         </div>
       )}
       <BrowserRouter>
@@ -30,41 +31,45 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectedRoute requiredRole={"user"}>
+              <ProtectedRoute>
                 <Home />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/admin"
+            path="/movie/:id"
             element={
-              <ProtectedRoute requiredRole={"admin"}>
-                <Admin />
+              <ProtectedRoute>
+                <TheatresForMovie />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/book-show/:id"
+            element={
+              <ProtectedRoute>
+                <BookShow />
               </ProtectedRoute>
             }
           />
           <Route
             path="/profile"
             element={
-              <ProtectedRoute requiredRole={"user"}> 
+              <ProtectedRoute>
                 <Profile />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/partner"
+            path="/admin"
             element={
-              <ProtectedRoute requiredRole={"partner"}>
-                <Partner />
+              <ProtectedRoute>
+                <Admin />
               </ProtectedRoute>
             }
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path='/forget' element={<Forget/>}/>
-          <Route path='/reset' element={<Reset/>}/>
-          <Route path="/movie/:id" element={<ProtectedRoute><SingleMovie/></ProtectedRoute>} />
-          <Route path="/book-show/:id" element={<ProtectedRoute><BookShow/></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,41 +1,42 @@
 const mongoose = require('mongoose');
 
 const showSchema = new mongoose.Schema({
-    name: {
+    name : {
         type: String,
         required: true
     },
-    date: {
+    date : {
         type: Date,
         required: true
     },
-    time: {
+    time : {
         type: String,
         required: true
     },
-    movie: {
+    movie : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'movies',
         required: true
     },
-    ticketPrice: {
+    ticketPrice : {
         type: Number,
         required: true
     },
-    totalSeats: {
+    totalSeats : {
         type: Number,
         required: true
     },
-    bookedSeats: {
+    bookedSeats : {
         type: Array,
         default: []
     },
-    theatre: {
+    theatre : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'theatres',
         required: true
     },
-}, {timestamps: true }
-    );
+} , { timestamps: true });
 
-module.exports = mongoose.model("shows", showSchema);
+const Show = mongoose.model('shows', showSchema);
+
+module.exports = Show;

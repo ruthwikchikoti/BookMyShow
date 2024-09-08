@@ -3,8 +3,8 @@ import { Col, Form, message, Modal, Row } from "antd";
 import Button from "../../components/Button";
 import { useDispatch } from "react-redux";
 import { HideLoading, ShowLoading } from "../../redux/loadersSlice";
-import { AddMovie , UpdateMovie } from "../../apicalls/movies";
 import moment from "moment";
+import { AddUpcomingMovie , UpdateUpcomingMovie } from "../../apicalls/upcoming";
 
 function MovieForm({
   showMovieFormModal,
@@ -27,16 +27,16 @@ function MovieForm({
       let response = null;
 
       if (formType === "add") {
-        response = await AddMovie(values);
+        response = await AddUpcomingMovie(values);
       } else {
-        response = await UpdateMovie({
+        response = await UpdateUpcomingMovie({
           ...values,
           movieId: selectedMovie._id,
         });
       }
 
       if (response.success) {
-        getData();
+       getData();
         message.success(response.message);
         setShowMovieFormModal(false);
       } else {

@@ -1,29 +1,24 @@
-import { Tabs } from 'antd';
-import Bookings from './Bookings';
+import React from "react";
+import { Tabs } from "antd";
+// import { useSelector, useDispatch } from "react-redux";
+import PageTitle from "../../components/PageTitle";
+import TheatresList from "./TheatresList";
+ import Bookings from "./Bookings";
+function Profile() {
+  return (
+    <div>
+      <PageTitle title="Profile" />
 
-const Profile = () => {
-    // const onChange = (key) => {
-    //     console.log(key);
-    //   };
-      const items = [
-        {
-          key: '1',
-          label: 'Bookings',
-          children: <Bookings/>,
-        },
-        // {
-        //   key: '3',
-        //   label: 'Tab 3',
-        //   children: 'Content of Tab Pane 3',
-        // },
-      ];
-
-    return (
-        <>
-        <h1>User Profile Page</h1>
-            <Tabs defaultActiveKey="2" items={items} />
-        </>
-    )
+      <Tabs defaultActiveKey="1">
+        <Tabs.TabPane tab="Bookings" key="1">
+           <Bookings/>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Apply for Theater" key="2">
+           <TheatresList/>
+        </Tabs.TabPane>
+      </Tabs>
+    </div>
+  );
 }
 
 export default Profile;
